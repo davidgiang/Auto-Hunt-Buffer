@@ -1,6 +1,7 @@
-3 // after clicking start
-1.5 // after clicking buy
-1.5 // after clicking start again (in case bought leif)
-1.5 // after clicking stage clear
-1.5 // after clicking confirm
-1.5 // after clicking try again
+2 // after clicking start
+2 // after clicking buy
+2 // after clicking start again (in case bought leif)
+2 // after clicking stage clear
+2 // after clicking confirm expo
+2 // after clicking confirm
+2 // after clicking try again

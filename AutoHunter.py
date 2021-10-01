@@ -11,14 +11,16 @@ class AutoHunter():
     file_format = '.png'
     stop_bool = False
 
-    def __init__(self, num_runs, buy, confirm, stageclear, start, tryagain):
+    def __init__(self, num_runs, buy, confirm, stageclear, start, tryagain, expoconfirm):
         self.num_runs = num_runs
         self.buy = buy
         self.confirm = confirm
         self.stageclear = stageclear
         self.start = start
         self.tryagain = tryagain
+        self.expoconfirm = expoconfirm
         self.timers_arr = []
+        self.failure = False
 
         with open('timers.txt', 'r') as f:
             for line in f:
@@ -40,8 +42,6 @@ class AutoHunter():
                 num_runs.set("Stopped")
                 break
 
-            runs_to_do -= 1
-
             self.findAndClickButton('start')
             time.sleep(float(self.timers_arr[0])) # after clicking start
             self.findAndClickButton('buy')
@@ -50,10 +50,17 @@ class AutoHunter():
             time.sleep(float(self.timers_arr[2])) # check again for start button in case bought leif
             self.waitUntilClear()
             time.sleep(float(self.timers_arr[3])) # after clicking stage clear
+            self.findAndClickButton('expoconfirm')
+            time.sleep(float(self.timers_arr[4]))  # after clicking confirm on expo
             self.findAndClickButton('confirm')
-            time.sleep(float(self.timers_arr[4])) # after clicking confirm
+            time.sleep(float(self.timers_arr[5])) # after clicking confirm
             self.findAndClickButton('tryagain')
-            time.sleep(float(self.timers_arr[5])) # after clicking try again
+            time.sleep(float(self.timers_arr[6])) # after clicking try again
+
+            if self.failure == False:
+                runs_to_do -= 1
+            else:
+                self.failure = False
 
             num_runs.set(runs_to_do)
 
@@ -82,6 +89,7 @@ class AutoHunter():
         while image_box == None:
             print(fail_box)
             if fail_box != None or self.stop_bool == True:
+                self.failure = True
                 return
             image_box = pyautogui.locateOnScreen("stageclear.png", confidence=0.9, grayscale=True)
             fail_box = pyautogui.locateOnScreen("tryagain.png", confidence=0.9, grayscale=True)
@@ -100,7 +108,7 @@ num_runs.set('Not entered')
 def bootUp():
     try:
         global AH
-        AH = AutoHunter(int(num_runs.get()), "buy.png", "confirm.png", "stageclear.png", "start.png", "tryagain.png")
+        AH = AutoHunter(int(num_runs.get()), "buy.png", "confirm.png", "stageclear.png", "start.png", "tryagain.png", "expoconfirm.png")
         print("AH initiated")
     except:
         print("Failed to initiate AH")
