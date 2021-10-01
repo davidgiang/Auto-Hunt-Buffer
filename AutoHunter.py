@@ -77,11 +77,14 @@ class AutoHunter():
     def waitUntilClear(self):
         print("Waiting to clear stage")
         image_box = pyautogui.locateOnScreen("stageclear.png", confidence = 0.9, grayscale=True)
+        fail_box = pyautogui.locateOnScreen("tryagain.png", confidence = 0.9, grayscale=True)
 
         while image_box == None:
-            if self.stop_bool == True:
+            print(fail_box)
+            if fail_box != None or self.stop_bool == True:
                 return
             image_box = pyautogui.locateOnScreen("stageclear.png", confidence=0.9, grayscale=True)
+            fail_box = pyautogui.locateOnScreen("tryagain.png", confidence=0.9, grayscale=True)
             print("Stage clear not found")
             time.sleep(float(1))
 
