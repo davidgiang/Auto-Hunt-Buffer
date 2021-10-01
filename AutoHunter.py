@@ -54,13 +54,16 @@ class AutoHunter():
             if self.failure == False:
                 self.findAndClickButton('confirm')
                 time.sleep(float(self.timers_arr[4]))  # after clicking confirm on expo
-                self.findAndClickButton('confirm')
-                time.sleep(float(self.timers_arr[5])) # after clicking confirm
-                self.findAndClickButton('confirm')
-                time.sleep(float(self.timers_arr[6]))
+                if self.checkIfExpo():
+                    print("was an expo, using increased delay")
+                    time.sleep(float(self.timers_arr[5]))  # if it was an expo poster, increase delay
+                    self.findAndClickButton('confirm')
+                    time.sleep(float(self.timers_arr[6])) # after clicking confirm
+                    self.findAndClickButton('confirm')
+                    time.sleep(float(self.timers_arr[7]))
 
             self.findAndClickButton('tryagain')
-            time.sleep(float(self.timers_arr[7])) # after clicking try again
+            time.sleep(float(self.timers_arr[8])) # after clicking try again
 
             if self.failure == False:
                 runs_to_do -= 1
@@ -85,6 +88,14 @@ class AutoHunter():
         pyautogui.moveTo(image_box)
         pyautogui.click(button='left')
         print("Clicked " + str(image) + " button")
+
+    def checkIfExpo(self):
+        image_box = pyautogui.locateOnScreen("confirm.png", confidence=0.9, grayscale=True)
+        if image_box != None:
+            print("Expo poster popped up")
+            return True
+        else:
+            return False
 
     def waitUntilClear(self):
         print("Waiting to clear stage")
